@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - AI Product Management System{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Inscription</h2>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </form>
+    <p>Déjà un compte? <a href="{{ url_for('auth.login') }}">Se connecter</a></p>
+</div>
+{% endblock %}
+

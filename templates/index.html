@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - AI Product Management System{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Bienvenue sur l'AI Product Management System</h1>
+    <p>Gérez vos produits et obtenez des recommandations intelligentes grâce à notre agent IA.</p>
+    {% if not current_user.is_authenticated %}
+        <div class="cta-buttons">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Commencer</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Se connecter</a>
+        </div>
+    {% else %}
+        <div class="cta-buttons">
+            <a href="{{ url_for('product.list_products') }}" class="btn btn-primary">Voir les produits</a>
+            <a href="{{ url_for('ai.chat') }}" class="btn btn-success">Chat avec l'IA</a>
+            {% if 'admin' in current_user.roles %}
+                <a href="{{ url_for('user.list_users') }}" class="btn btn-secondary">Gérer les utilisateurs</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="features">
+    <div class="feature">
+        <h3>Gestion des Produits</h3>
+        <p>Ajoutez, modifiez et supprimez des produits facilement.</p>
+    </div>
+    <div class="feature">
+        <h3>Recommandations IA</h3>
+        <p>Obtenez des recommandations de produits personnalisées grâce à notre agent IA.</p>
+    </div>
+    <div class="feature">
+        <h3>Gestion des Utilisateurs</h3>
+        <p>Les administrateurs peuvent gérer les utilisateurs et leurs rôles.</p>
+    </div>
+</div>
+{% endblock %}
+

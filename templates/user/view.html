@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Voir l'utilisateur{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Détails de l'utilisateur</h1>
+    <a href="{{ url_for('user.list_users') }}" class="btn btn-secondary">Retour à la liste</a>
+</div>
+
+<div class="user-details">
+    <div class="detail-group">
+        <label>Email:</label>
+        <p>{{ user.email }}</p>
+    </div>
+    
+    <div class="detail-group">
+        <label>Rôles:</label>
+        <p>{{ user.roles|join(', ') }}</p>
+    </div>
+    
+    <div class="detail-group">
+        <label>ID:</label>
+        <p>{{ user.id }}</p>
+    </div>
+    
+    <div class="actions">
+        <a href="{{ url_for('user.update_user', user_id=user.id) }}" class="btn btn-warning">Modifier</a>
+        <form method="POST" action="{{ url_for('user.delete_user', user_id=user.id) }}" style="display: inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur?')">Supprimer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

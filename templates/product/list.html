@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Produits - AI Product Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Liste des Produits</h2>
+    {% if 'admin' in current_user.roles %}
+        <a href="{{ url_for('product.create_product') }}" class="btn btn-primary">Ajouter un produit</a>
+    {% endif %}
+</div>
+
+<div class="ai-chat-section">
+    <h3>Demandez des recommandations à notre agent IA</h3>
+    <div class="chat-container">
+        <textarea id="ai-query" placeholder="Entrez votre question ici..."></textarea>
+        <button onclick="getRecommendations()" class="btn btn-primary">Obtenir des recommandations</button>
+    </div>
+    <div id="ai-response" class="ai-response"></div>
+</div>
+
+<div class="product-grid">
+    {% for product in products %}
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Error'">
+            </div>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p class="price">{{ product.price }}€</p>
+                <div class="product-actions">
+                    <a href="{{ url_for('product.view_product', product_id=product.id) }}" class="btn btn-secondary">Voir détails</a>
+                    {% if 'admin' in current_user.roles %}
+                        <a href="{{ url_for('product.update_product', product_id=product.id) }}" class="btn btn-warning">Modifier</a>
+                        <form method="POST" action="{{ url_for('product.delete_product', product_id=product.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?')">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    async function getRecommendations() {
+        const query = document.getElementById('ai-query').value;
+        const responseDiv = document.getElementById('ai-response');
+        
+        if (!query) {
+            responseDiv.innerHTML = '<p class="error">Veuillez entrer une question.</p>';
+            return;
+        }
+
+        responseDiv.innerHTML = '<p>Chargement...</p>';
+
+        try {
+            const response = await fetch('/ai/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                responseDiv.innerHTML = `<div class="recommendation">${data.recommendations}</div>`;
+            } else {
+                responseDiv.innerHTML = `<p class="error">Erreur: ${data.error}</p>`;
+            }
+        } catch (error) {
+            responseDiv.innerHTML = `<p class="error">Erreur de connexion: ${error.message}</p>`;
+        }
+    }
+</script>
+{% endblock %}
+

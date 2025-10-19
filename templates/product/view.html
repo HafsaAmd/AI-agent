@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - AI Product Management System{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-image">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'">
+    </div>
+    <div class="product-detail-info">
+        <h2>{{ product.name }}</h2>
+        <p class="description">{{ product.description }}</p>
+        <p class="price">Prix: {{ product.price }}€</p>
+        <div class="actions">
+            <a href="{{ url_for('product.list_products') }}" class="btn btn-secondary">Retour à la liste</a>
+            {% if 'admin' in current_user.roles %}
+                <a href="{{ url_for('product.update_product', product_id=product.id) }}" class="btn btn-warning">Modifier</a>
+                <form method="POST" action="{{ url_for('product.delete_product', product_id=product.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?')">Supprimer</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
